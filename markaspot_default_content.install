@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Contains markaspot_open311.module
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use \Drupal\node\Entity\Node;
+
+
+/**
+ * Implements hook_install().
+ */
+
+function markaspot_default_content_install() {
+
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $user = \Drupal\user\Entity\User::create();
+
+//Mandatory settings
+  $user->setPassword('password');
+  $user->set('uuid', '0111201615f39546ff-5d21-19539-b66d-546ff5d217c539d766d359045e74001112016');
+  $user->enforceIsNew();
+  $user->setEmail('holger@mrkaspot.org');
+  $user->setUsername('api_user');//This username must be unique and accept only a-Z,0-9, - _ @ .
+
+//Optional settings
+  $user->set("init", 'api_user@markaspot.org');
+  $user->set("langcode", $language);
+  $user->set("preferred_langcode", $language);
+  $user->set("preferred_admin_langcode", $language);
+  //$user->set("setting_name", 'setting_value');
+  $user->activate();
+
+//Save user
+  $res = $user->save();
+  if (isset($res)) {
+    drupal_set_message('User saved');
+  }
+
+  if (markaspot_default_content_customize_content() == false) {
+
+    drupal_set_message(t('Default content for Open311 could not be updated to local installation'));
+  } else {
+    drupal_set_message(t('Default content customized'));
+  }
+}
+
+
+
+function markaspot_default_content_customize_content(){
+  global $base_url;
+
+  $page_feature = drupal_get_path('module', 'markaspot_default_content');
+  $path = Drupal::service('file_system')->realpath($page_feature);
+
+  $jsonString = file_get_contents($path . '/content/node/page_14.json');
+
+  // Check for default code status.
+  if (strstr($jsonString, 'default')){
+    $url = str_replace('"', '', json_encode($base_url));
+    $jsonString = str_replace('http:\/\/default', $url, $jsonString);
+  }
+  return file_put_contents($path . '/content/node/page_14.json', $jsonString);
+}
