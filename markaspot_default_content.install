@@ -43,14 +43,13 @@ function markaspot_default_content_install() {
 
     drupal_set_message(t('Default content for Open311 could not be updated to local installation'));
   } else {
-    drupal_set_message(t('Default content customized'));
+    drupal_set_message(t('Default content customized with Server Name'. " " .$_SERVER['SERVER_NAME']));
   }
 }
 
 
 
 function markaspot_default_content_customize_content(){
-  global $base_url;
 
   $page_feature = drupal_get_path('module', 'markaspot_default_content');
   $path = Drupal::service('file_system')->realpath($page_feature);
@@ -59,7 +58,8 @@ function markaspot_default_content_customize_content(){
 
   // Check for default code status.
   if (strstr($jsonString, 'default')){
-    $url = str_replace('"', '', json_encode($base_url));
+
+    $url = str_replace('"', '', json_encode($_SERVER['SERVER_NAME']));
     $jsonString = str_replace('http:\/\/default', $url, $jsonString);
   }
   return file_put_contents($path . '/content/node/page_14.json', $jsonString);
