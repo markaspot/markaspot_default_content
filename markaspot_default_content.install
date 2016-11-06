@@ -59,7 +59,7 @@ function markaspot_default_content_customize_content(){
   // Check for default code status.
   if (strstr($jsonString, 'default')){
 
-    $url = str_replace('"', '', json_encode($_SERVER['SERVER_NAME']));
+    $url = str_replace('"', '', json_encode('http://' . $_SERVER['SERVER_NAME']));
     $jsonString = str_replace('http:\/\/default', $url, $jsonString);
   }
   return file_put_contents($path . '/content/node/page_14.json', $jsonString);
