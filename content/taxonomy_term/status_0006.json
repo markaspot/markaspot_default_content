@@ -59,7 +59,7 @@
     ],
     "field_status_icon": [
         {
-            "value": "stop"
+            "value": "fa-stop-circle-o"
         }
     ]
 }

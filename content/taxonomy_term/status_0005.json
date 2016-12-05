@@ -59,7 +59,7 @@
     ],
     "field_status_icon": [
         {
-            "value": "play"
+            "value": "fa-play-circle-o"
         }
     ]
 }
