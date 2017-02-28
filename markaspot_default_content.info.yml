@@ -6,5 +6,4 @@ package: Mark-a-Spot
 dependencies:
   - default_content
   - block_content
-  - masradix
   - markaspot_blocks
